@@ -3,24 +3,36 @@ CHIP A6Q2201890722 {
     OUT f;
 
     PARTS:
-    
-    Not(in=a, out=na); // ¬a
-    Not(in=b, out=nb); // ¬b
-    Not(in=c, out=nc); // ¬c
-    Not(in=d, out=nd); // ¬d
+    // NOT gates
+    Not(in=a, out=NOTa);
+    Not(in=b, out=NOTb);
+    Not(in=c, out=NOTc);
+    Not(in=d, out=NOTd);
 
-    
-    And(a=na, b=nb, c=nc, d=d, out=w1);      
-    And(a=na, b=nb, c=c, d=d, out=w2);       
-    And(a=na, b=b, c=nc, d=nd, out=w3);      
-    And(a=na, b=b, c=c, d=nd, out=w4);       
-    And(a=a, b=nb, c=c, d=nd, out=w5);       
-    And(a=a, b=b, c=c, d=d, out=w6);         
+    // AND gates for each condition
+    And(a=NOTa, b=NOTb, out=FIRST1);
+    And(a=FIRST1, b=NOTc, out=FIRST2);
+    And(a=FIRST2, b=d, out=FIRST);
 
-    
-    Or(a=w1, b=w2, out=w7);
-    Or(a=w7, b=w3, out=w8);
-    Or(a=w8, b=w4, out=w9);
-    Or(a=w9, b=w5, out=w10);
-    Or(a=w10, b=w6, out=f);                  
+    And(a=NOTa, b=NOTb, out=SECOND1);
+    And(a=SECOND1, b=c, out=SECOND2);
+    And(a=SECOND2, b=d, out=SECOND);
+
+    And(a=NOTa, b=b, out=THIRD1);
+    And(a=THIRD1, b=NOTc, out=THIRD2);
+    And(a=THIRD2, b=NOTd, out=THIRD);
+
+    And(a=a, b=NOTb, out=FOURTH1);
+    And(a=FOURTH1, b=c, out=FOURTH2);
+    And(a=FOURTH2, b=NOTd, out=FOURTH);
+
+    And(a=a, b=b, out=FIFTH1);
+    And(a=FIFTH1, b=c, out=FIFTH2);
+    And(a=FIFTH2, b=d, out=FIFTH);
+
+    // OR gates to combine the results
+    Or(a=FIRST, b=SECOND, out=FIRSTANDSECOND);
+    Or(a=FIRSTANDSECOND, b=THIRD, out=FIRSTANDSECONDANDTHIRD);
+    Or(a=FIRSTANDSECONDANDTHIRD, b=FOURTH, out=FIRSTANDSECONDANDTHIRDANDFOURTH);
+    Or(a=FIRSTANDSECONDANDTHIRDANDFOURTH, b=FIFTH, out=f);
 }
