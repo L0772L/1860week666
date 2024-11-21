@@ -1,38 +1,37 @@
-CHIP A6Q2201890722 {
+CHIP A6Q2<your student number> {
     IN a, b, c, d;
     OUT f;
 
     PARTS:
-    // NOT gates
-    Not(in=a, out=NOTa);
-    Not(in=b, out=NOTb);
-    Not(in=c, out=NOTc);
-    Not(in=d, out=NOTd);
+    // Implement (NOT a AND NOT b AND NOT d AND (NOT c OR c))
+    Not(in=a, out=na);
+    Not(in=b, out=nb);
+    Not(in=d, out=nd);
+    And(a=na, b=nb, out=na_nb);
+    And(a=na_nb, b=nd, out=na_nb_nd);
 
-    // AND gates for each condition
-    And(a=NOTa, b=NOTb, out=FIRST1);
-    And(a=FIRST1, b=NOTc, out=FIRST2);
-    And(a=FIRST2, b=d, out=FIRST);
+    Not(in=c, out=nc);
+    And(a=na_nb_nd, b=nc, out=term1a);
+    And(a=na_nb_nd, b=c, out=term1b);
+    Or(a=term1a, b=term1b, out=term1);
 
-    And(a=NOTa, b=NOTb, out=SECOND1);
-    And(a=SECOND1, b=c, out=SECOND2);
-    And(a=SECOND2, b=d, out=SECOND);
+    // Implement (NOT a AND b AND NOT c AND d)
+    And(a=na, b=b, out=na_b);
+    And(a=na_b, b=nc, out=na_b_nc);
+    And(a=na_b_nc, b=d, out=term2);
 
-    And(a=NOTa, b=b, out=THIRD1);
-    And(a=THIRD1, b=NOTc, out=THIRD2);
-    And(a=THIRD2, b=NOTd, out=THIRD);
+    // Implement (a AND NOT b AND c AND d)
+    And(a=a, b=nb, out=a_nb);
+    And(a=a_nb, b=c, out=a_nb_c);
+    And(a=a_nb_c, b=d, out=term3);
 
-    And(a=a, b=NOTb, out=FOURTH1);
-    And(a=FOURTH1, b=c, out=FOURTH2);
-    And(a=FOURTH2, b=NOTd, out=FOURTH);
+    // Implement (a AND b AND NOT c AND NOT d)
+    And(a=a, b=b, out=a_b);
+    And(a=a_b, b=nc, out=a_b_nc);
+    And(a=a_b_nc, b=nd, out=term4);
 
-    And(a=a, b=b, out=FIFTH1);
-    And(a=FIFTH1, b=c, out=FIFTH2);
-    And(a=FIFTH2, b=d, out=FIFTH);
-
-    // OR gates to combine the results
-    Or(a=FIRST, b=SECOND, out=FIRSTANDSECOND);
-    Or(a=FIRSTANDSECOND, b=THIRD, out=FIRSTANDSECONDANDTHIRD);
-    Or(a=FIRSTANDSECONDANDTHIRD, b=FOURTH, out=FIRSTANDSECONDANDTHIRDANDFOURTH);
-    Or(a=FIRSTANDSECONDANDTHIRDANDFOURTH, b=FIFTH, out=f);
+    // OR all terms together
+    Or(a=term1, b=term2, out=partial1);
+    Or(a=partial1, b=term3, out=partial2);
+    Or(a=partial2, b=term4, out=f);
 }
