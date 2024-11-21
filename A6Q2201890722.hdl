@@ -3,24 +3,24 @@ CHIP A6Q2201890722 {
     OUT f;
 
     PARTS:
-    // Negation operations
+    
     Not(in=a, out=na); // ¬a
     Not(in=b, out=nb); // ¬b
     Not(in=c, out=nc); // ¬c
     Not(in=d, out=nd); // ¬d
 
-    // Constructing sub-expressions
-    And(a=na, b=nb, c=nc, d=d, out=w1);      // ¬a ∧ ¬b ∧ ¬c ∧ d
-    And(a=na, b=nb, c=c, d=d, out=w2);       // ¬a ∧ ¬b ∧ c ∧ d
-    And(a=na, b=b, c=nc, d=nd, out=w3);      // ¬a ∧ b ∧ ¬c ∧ ¬d
-    And(a=na, b=b, c=c, d=nd, out=w4);       // ¬a ∧ b ∧ c ∧ ¬d
-    And(a=a, b=nb, c=c, d=nd, out=w5);       // a ∧ ¬b ∧ c ∧ ¬d
-    And(a=a, b=b, c=c, d=d, out=w6);         // a ∧ b ∧ c ∧ d
+    
+    And(a=na, b=nb, c=nc, d=d, out=w1);      
+    And(a=na, b=nb, c=c, d=d, out=w2);       
+    And(a=na, b=b, c=nc, d=nd, out=w3);      
+    And(a=na, b=b, c=c, d=nd, out=w4);       
+    And(a=a, b=nb, c=c, d=nd, out=w5);       
+    And(a=a, b=b, c=c, d=d, out=w6);         
 
-    // Combining outputs using OR gates
+    
     Or(a=w1, b=w2, out=w7);
     Or(a=w7, b=w3, out=w8);
     Or(a=w8, b=w4, out=w9);
     Or(a=w9, b=w5, out=w10);
-    Or(a=w10, b=w6, out=f);                  // Final output f
+    Or(a=w10, b=w6, out=f);                  
 }
